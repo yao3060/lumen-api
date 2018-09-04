@@ -11,17 +11,23 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+$router->get('api', function ()    {
+    // Uses Auth Middleware
+    return response()->json($_SERVER);
 });
 
+$router->group(['prefix' => 'api/jwt-auth/v1'], function () use ($router) {
 
-$router->group(['middleware' => 'token'], function () use ($router) {
+    $router->post('token', 'AuthController@token');
 
-    $router->get('/', function ()    {
+    $router->get('user/profile', function () {
         // Uses Auth Middleware
-        return route('/');
+        return response()->json($_SERVER);
     });
+
+});
+
+$router->group(['prefix' => 'api/v1/'], function () use ($router) {
 
     $router->get('home', function () {
         return response()->json(['name' => 'Abigail', 'state' => 'CA']);
@@ -29,7 +35,7 @@ $router->group(['middleware' => 'token'], function () use ($router) {
 
     $router->get('user/profile', function () {
         // Uses Auth Middleware
-        return json_encode($_SERVER);
+        return response()->json($_SERVER);
     });
 
 });
