@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VUE</title>
+    <!-- 生产环境版本，优化了尺寸和速度 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+    <!-- 因为 AJAX 库和通用工具的生态已经相当丰富，Vue 核心代码没有重复 -->
+    <!-- 提供这些功能以保持精简。这也可以让你自由选择自己更熟悉的工具。 -->
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+
+</head>
+<body>
+
+
+<script>
+
+    /**
+     * @param {number} left
+     * @param {number} right
+     * @return {number[]}
+     */
+    var selfDividingNumbers = function(left, right) {
+
+        var dividing_numbers = [];
+
+        function init(){
+
+            for(number = left; number <= right; number ++ ){
+
+                if(is_dividing_number(number)){
+                    dividing_numbers.push(number);
+                }
+            }
+
+            console.log(dividing_numbers)
+
+        }
+
+        function is_dividing_number(number){
+
+            if(number.toString().indexOf('0') > 0){
+                return false;
+            }
+
+            if(number < 10){
+                return true;
+            } else {
+
+                var number_array = number.toString().split(''),
+                    status = 0
+                number_array.forEach(function(divid_number) {
+
+                    if( number % parseInt(divid_number) > 0 ){
+                        status++
+                    }
+
+                });
+
+                console.log(status);
+                if(status > 0 ){
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+
+
+        }
+
+
+        init();
+
+    };
+
+    selfDividingNumbers(127, 128)
+
+</script>
+
+</body>
+</html>

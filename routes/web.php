@@ -10,11 +10,13 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
+$router->get('/', 'RootController@index' );
 
-$router->get('api', function ()    {
-    // Uses Auth Middleware
-    return response()->json($_SERVER);
+$router->get('/key', function() {
+    return str_random(32);
 });
+
+$router->get('api', 'RootController@json' );
 
 $router->group(['prefix' => 'api/jwt-auth/v1'], function () use ($router) {
 
@@ -27,11 +29,9 @@ $router->group(['prefix' => 'api/jwt-auth/v1'], function () use ($router) {
 
 });
 
-$router->group(['prefix' => 'api/v1/'], function () use ($router) {
+$router->group(['prefix' => 'api/wp/v1/', 'middleware' => 'auth'], function () use ($router) {
 
-    $router->get('home', function () {
-        return response()->json(['name' => 'Abigail', 'state' => 'CA']);
-    });
+    $router->get('posts', 'PostsController@list');
 
     $router->get('user/profile', function () {
         // Uses Auth Middleware

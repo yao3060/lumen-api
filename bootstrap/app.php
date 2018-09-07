@@ -25,7 +25,7 @@ $app = new Laravel\Lumen\Application(
 
  $app->withFacades();
 
-// $app->withEloquent();
+ $app->withEloquent();
 
 /*
 |--------------------------------------------------------------------------
@@ -64,7 +64,7 @@ $app->singleton(
 // ]);
 
  $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
+     'auth' => App\Http\Middleware\Authenticate::class,
 //     'token' => App\Http\Middleware\CheckToken::class,
  ]);
 
@@ -80,8 +80,8 @@ $app->singleton(
 */
 
 // $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class);
+ $app->register(App\Providers\AuthServiceProvider::class);
+ $app->register(App\Providers\EventServiceProvider::class);
  $app->register(MikeMcLin\WpPassword\WpPasswordProvider::class);
 
 // $app->alias('JWTAuth', Tymon\JWTAuth\Facades\JWTAuth::class );
@@ -105,6 +105,14 @@ $app->router->group([
     require __DIR__.'/../routes/web.php';
 });
 
-//dd($app);
+//Monolog\Handler\StreamHandler
+/*
+ * 配置日志文件为每日
+ */
+$app->configureMonologUsing(function(Monolog\Logger $monoLog) use ($app){
+    return $monoLog->pushHandler(
+        new Monolog\Handler\RotatingFileHandler(storage_path('logs/api.log'),$monoLog::INFO)
+    );
+});
 
 return $app;

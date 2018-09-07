@@ -16,7 +16,7 @@ use \Firebase\JWT\ExpiredException;
 use \Firebase\JWT\InvalidArgumentException;
 use \Firebase\JWT\UnexpectedValueException;
 
-class CheckToken
+class JWTMiddleware
 {
     /**
      * Handle an incoming request.
@@ -27,14 +27,12 @@ class CheckToken
      */
     public function handle($request, Closure $next)
     {
-
-        $this->add_cors_support();
         /*
          * Looking for the HTTP_AUTHORIZATION header, if not present just
          * return the user.
+         * for test: $auth = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9jZHBzc28yLnVhdC5jZHB5dW4uY29tIiwiaWF0IjoxNTM2MDI5NDY2LCJuYmYiOjE1MzYwMjk0NjYsImV4cCI6MTU5OTcwNjI2Niwib3Blbl9pZCI6Indlc3Rhcl9jZHBzc28yXzk4MzA5OGJlYWM0ODExZThhMTM0MDAwYzI5YTk3MDgyIiwiZGF0YSI6eyJ1c2VyIjp7ImlkIjoiMTUxMzcifX19.RWLypofoQAk1JrMLlilXCuTQHzfeRD159QaqXB_V_to';
          */
         $auth = isset($_SERVER['HTTP_AUTHORIZATION']) ?  $_SERVER['HTTP_AUTHORIZATION'] : false;
-        $auth = 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9jZHBzc28yLnVhdC5jZHB5dW4uY29tIiwiaWF0IjoxNTM2MDI5NDY2LCJuYmYiOjE1MzYwMjk0NjYsImV4cCI6MTU5OTcwNjI2Niwib3Blbl9pZCI6Indlc3Rhcl9jZHBzc28yXzk4MzA5OGJlYWM0ODExZThhMTM0MDAwYzI5YTk3MDgyIiwiZGF0YSI6eyJ1c2VyIjp7ImlkIjoiMTUxMzcifX19.RWLypofoQAk1JrMLlilXCuTQHzfeRD159QaqXB_V_to';
 
         /* Double check for different auth header string (server dependent) */
         if (!$auth) {

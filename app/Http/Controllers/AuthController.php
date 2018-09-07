@@ -13,11 +13,31 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use Firebase\JWT\JWT;
 use MikeMcLin\WpPassword\Facades\WpPassword;
+use Validator;
 
 class AuthController extends Controller
 {
 
     public function token(Request $request){
+
+        $validator = Validator::make($request->all(), [
+            'username' => 'required',
+            'password'=> 'required'
+        ]);
+
+        if ($validator->fails()) {
+
+            $data = new \stdClass();
+            $data->info = $validator->errors();
+            $data->status = 403;
+            return response()->json([
+                'code' => 'fields_validator_failed',
+                'message' => 'Fields validator failed',
+                'data' => [
+                    $data
+                ]
+            ]);
+        }
 
         $username = $request->get('username');
         $password = $request->get('password');
@@ -32,11 +52,11 @@ class AuthController extends Controller
                 ->header('X-Cache-Info', 'user_tokens_' . $user_id);
         }
 
-        $key = env('JWT_SECRET', false);
+        $key = env('JWT_AUTH_SECRET_KEY', false);
         $issuedAt = time();
         $notBefore = $issuedAt;
         $expire = $issuedAt + (3600 * 24 * 365);
-        $source_domain = 'http://example.org';
+        $source_domain = 'http://ep-api.local';
         $open_id = $user->user_login;
 
         $token = array(
@@ -58,7 +78,7 @@ class AuthController extends Controller
         $user['token'] = $token;
         $user['meta'] = $this->get_usermeta($user_id);
 
-        Cache::put( 'user_token_' . $user_id, $user, 3600 );
+        Cache::put( 'user_token_' . $user_id, $user, 10 );
 
         return response( $user );
     }

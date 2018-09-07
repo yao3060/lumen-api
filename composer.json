@@ -9,7 +9,8 @@
         "laravel/lumen-framework": "5.5.*",
         "vlucas/phpdotenv": "~2.2",
         "firebase/php-jwt": "^5.0",
-        "mikemclin/laravel-wp-password": "~2.0.1"
+        "mikemclin/laravel-wp-password": "~2.0.1",
+        "laravelista/lumen-vendor-publish": "^2.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
